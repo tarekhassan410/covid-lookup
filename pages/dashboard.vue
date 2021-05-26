@@ -8,34 +8,32 @@
         <div class="main-area">
 
             <b-navbar class="py-2" toggleable="md" variant="secondary">
-
             <b-navbar-brand href="#"></b-navbar-brand>
-
                 <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
                 <b-collapse id="nav-collapse" is-nav>
                     <b-navbar-nav class="ml-auto">
                         <b-dropdown-item href="#"> <div class="text-white"> <span  class="material-icons"> notifications </span> </div> </b-dropdown-item>
                         <b-dropdown-item  href="#"> <div class="text-white d-flex align-items-center">  <span class="text-white material-icons"> person </span> demo@mytigate.com </div> </b-dropdown-item>
                     </b-navbar-nav>
                 </b-collapse>
-
             </b-navbar>
-
 
             <main class="py-4">
                 <b-container fluid>
                     <p> Dashboard </p>
                 <div>
                     <b-input-group>
-                        <b-form-input  v-model="country" placeholder="search" @change="getCountryCovidData" @keyup.enter.native="getCountryCovidData" ></b-form-input>
+                        <b-form-input v-model="country" placeholder="search" @change="getCountryCovidData" @keyup.enter.native="getCountryCovidData" ></b-form-input>
                         <template #append>
                             <b-input-group-text class="search"  @click="getCountryCovidData">Search</b-input-group-text>
                         </template>
                     </b-input-group>
 
-                    <div v-if="stats.length == 0">
-                        0 results
+                    <div v-if="loading">
+                        <loading />
+                    </div>
+                    <div v-else-if="stats.length == 0">
+                        <loading />
                     </div>
                     <div v-else>
                     <b-card v-for="stat in stats" :key="stat.countryInfo._id" 
@@ -112,7 +110,8 @@
         data() {
             return {
                 stats: [],
-                country: ""
+                country: "",
+                loading: true
             }
         },
         created(){
@@ -124,6 +123,7 @@
                 .then( response => response.json() )
                 .then( response => {
                     this.stats = response
+                    this.loading = false
                 } )
             },
             getCountryCovidData(){
@@ -145,7 +145,6 @@
                         this.stats = []
                     }
                 })
-                
             }
         },
         
@@ -187,7 +186,6 @@ main{
 }
 footer{
     background-color: lightgray;
-    
     width: 100%;
 }
 
